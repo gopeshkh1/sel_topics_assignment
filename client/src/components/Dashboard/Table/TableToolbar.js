@@ -13,7 +13,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 
 export default function TableToolbar(props) {
-  const { orderBy, sortTheTable, sortByParams, onMpSearchValueChange } = props;
+  const { sortBy, sortTheTable, sortByParams, onMpSearchValueChange } = props;
   const classes = useToolBarStyle();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -53,9 +53,10 @@ export default function TableToolbar(props) {
             <Button
               variant="contained"
               aria-haspopup="true"
+              style={{ width: 250 }}
               onClick={(e) => setAnchorEl(e.currentTarget)}
             >
-              {orderBy}
+              {sortBy["label"]}
               <FilterListIcon />
             </Button>
             <Menu
@@ -67,11 +68,11 @@ export default function TableToolbar(props) {
             >
               {sortByParams.map((param) => (
                 <MenuItem
-                  key={param}
+                  key={param.id}
                   onClick={handleSortChange.bind(this, param)}
-                  value={param}
+                  value={param.id}
                 >
-                  {param}
+                  {param.label}
                 </MenuItem>
               ))}
             </Menu>

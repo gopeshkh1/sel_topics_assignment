@@ -9,6 +9,19 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import { Avatar } from "@material-ui/core";
 
+const displayParams = [
+  { id: "Number of terms", label: "Term" },
+  { id: "State", label: "State" },
+  { id: "Constituency", label: "Constituency" },
+  {
+    id: "Educational qualifications",
+    label: "Educational qualifications",
+  },
+  { id: "Educational qualifications - details", label: "Educational details" },
+  { id: "Age", label: "Age" },
+  { id: "Gender", label: "Gender" },
+];
+
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -44,47 +57,41 @@ const DialogContent = withStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
     "& span": {
-      color: "blue",
-      margin: 10,
+      color: "brown",
+      margin: 7,
     },
   },
 }))(MuiDialogContent);
 
 export default function MPInfo(props) {
-  const { name, handleClose, open } = props;
+  const { selectedRow, handleClose, open } = props;
 
   return (
     <div>
-      <Dialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          <Avatar style={{ backgroundColor: "orange" }}>
-            {name.charAt(0)}
-          </Avatar>
-          {name}
-        </DialogTitle>
-        <DialogContent dividers>
-          <Typography gutterBottom>
-            <span>
-              <b>Constituency:</b>
-            </span>
-            Rajya sabha
-          </Typography>
-          <Typography gutterBottom>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
-            auctor.
-          </Typography>
-          <Typography gutterBottom>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
-            cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
-            dui. Donec ullamcorper nulla non metus auctor fringilla.
-          </Typography>
-        </DialogContent>
-      </Dialog>
+      {selectedRow && (
+        <Dialog
+          onClose={handleClose}
+          aria-labelledby="customized-dialog-title"
+          open={open}
+        >
+          <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+            <Avatar style={{ backgroundColor: "orange" }}>
+              {selectedRow["MP name"].charAt(0)}
+            </Avatar>
+            {selectedRow["MP name"]}
+          </DialogTitle>
+          <DialogContent dividers>
+            {displayParams.map((param) => (
+              <Typography key={param.id}>
+                <span>
+                  <b>{param.label}</b>
+                </span>
+                {selectedRow[param.id]}
+              </Typography>
+            ))}
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

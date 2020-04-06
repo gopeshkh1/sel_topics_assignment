@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "client-start": "webpack-dev-server --config ./client/build-utils/webpack.config.js --env.env=dev",
+    "client-start": "webpack-dev-server --devtool source-map --config ./client/build-utils/webpack.config.js --env.env=dev",
     "client-build": "webpack --config ./client/build-utils/webpack.config.js --env.env=prod",
-    "server-start": "nodemon server/index.js"
+    "server-start": "nodemon server/index.js",
+    "start": "concurrently \"npm run client-start\" \"npm run server-start\""
   },
   "keywords": [],
   "author": "",
@@ -15,7 +16,9 @@
     "@material-ui/icons": "^4.9.1",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
+    "concurrently": "^5.1.0",
     "cors": "^2.8.5",
+    "csv-parser": "^2.3.2",
     "express": "^4.17.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
