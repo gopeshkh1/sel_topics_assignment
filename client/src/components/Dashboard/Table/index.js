@@ -11,15 +11,27 @@ import { useStyles } from "./Table.style";
 import TableToolbar from "./TableToolbar";
 import MPInfo from "./MPInfo";
 import axios from "axios";
+import { TableHeadMenu } from "./CustomizedComp";
 
 const columns = [
   { id: "MP name", label: "Name", minWidth: 170 },
   { id: "Political party", label: "Party", minWidth: 100 },
+  { id: "State", label: "State", minWidth: 170 },
 ];
+
+const discreteValues = {
+  "Political party": new Set(["All"]),
+  State: new Set(["All"]),
+};
+
+const columnFilterValue = {
+  "Political party": "All",
+  State: "All",
+};
 
 const sortByParams = [
   { id: "Debates", label: "No. of debates" },
-  { id: "Questions", label: "No. of Questions asked" },
+  { id: "Questions", label: "No. of Ques. asked" },
   {
     id: "Attendance",
     label: "Attendance %",
@@ -31,14 +43,13 @@ var __init = true;
 
 export default function CustomizedTable() {
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [sortBy, setSortBy] = React.useState(sortByParams[0]);
-  const [defaultrows, setDefaultRows] = React.useState([]);
-  // const [mpSearchValue, setMpSearchValue] = React.useState("");
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [rows_copy, setRowCopy] = React.useState(defaultrows);
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedRow, setSelectedRow] = React.useState(null);
+  const [page, setPage] = useState(0);
+  const [sortBy, setSortBy] = useState(sortByParams[0]);
+  const [defaultrows, setDefaultRows] = useState([]);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rows_copy, setRowCopy] = useState(defaultrows);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const toggleModalState = () => {
     setModalOpen(!modalOpen);
@@ -55,10 +66,11 @@ export default function CustomizedTable() {
 
   const onMpSearchValueChange = (e) => {
     var value = e.target.value.toLowerCase();
-    const newrows = defaultrows
-      .filter((row) => row["MP name"].toLowerCase().includes(value))
-      .sort(sortingComparator(sortBy["id"]));
-    console.log(newrows);
+    var newrows = defaultrows.filter((row) =>
+      row["MP name"].toLowerCase().startsWith(value)
+    );
+
+    newrows = columnFilter(newrows);
     setRowCopy(newrows);
   };
 
@@ -67,16 +79,22 @@ export default function CustomizedTable() {
     setPage(0);
   };
 
-  const sortingComparator = (param) => {
-    return function (a, b) {
-      if (parseInt(a[param]) > parseInt(b[param])) return -1;
-      if (parseInt(a[param]) < parseInt(b[param])) return 1;
-    };
+  const sortingComparator = (param) => (a, b) => {
+    if (a[param] > b[param]) return -1;
+    if (a[param] < b[param]) return 1;
   };
 
   const sortTheTable = (param) => {
     setSortBy(param);
     setRowCopy(defaultrows.sort(sortingComparator(param.id)));
+  };
+
+  const makeDiscreteValuesSet = (rows) => {
+    rows.forEach((row) => {
+      for (var val in discreteValues) {
+        discreteValues[val].add(row[val]);
+      }
+    });
   };
 
   useEffect(() => {
@@ -86,10 +104,34 @@ export default function CustomizedTable() {
         rows.sort(sortingComparator(sortByParams[0]["id"]));
         setDefaultRows(rows);
         setRowCopy(rows);
+        makeDiscreteValuesSet(rows);
         __init = false;
       });
     }
   });
+
+  const columnFilterAction = (param, selectedColumn) => {
+    columnFilterValue[selectedColumn] = param;
+    const newrows = columnFilter(defaultrows);
+    setRowCopy(newrows);
+  };
+
+  const columnFilter = (rows) => {
+    return rows.filter((row) => {
+      var returnValue = true;
+
+      for (var value in columnFilterValue) {
+        if (
+          columnFilterValue[value] !== "All" &&
+          row[value] !== columnFilterValue[value]
+        ) {
+          returnValue = false;
+        }
+      }
+
+      return returnValue;
+    });
+  };
 
   return (
     <div>
@@ -110,14 +152,27 @@ export default function CustomizedTable() {
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
+                {columns.map((column) => {
+                  const tableHeadOpen =
+                    column.label === "State" || column.label === "Party";
+
+                  return (
+                    <TableCell
+                      key={column.id}
+                      style={{ minWidth: column.minWidth }}
+                    >
+                      {column.label}
+                      {tableHeadOpen && (
+                        <TableHeadMenu
+                          selectedValue={columnFilterValue[column.id]}
+                          selectAction={columnFilterAction}
+                          selectedColumn={column.id}
+                          valuesToSelect={[...discreteValues[column.id]]}
+                        />
+                      )}
+                    </TableCell>
+                  );
+                })}
                 <TableCell align="right" style={{ minWidth: 170 }}>
                   {sortBy["label"]}
                 </TableCell>

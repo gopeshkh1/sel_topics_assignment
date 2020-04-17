@@ -12,12 +12,6 @@ export const useStyles = makeStyles({
 export const useToolBarStyle = makeStyles((theme) => ({
   root: { backgroundColor: "#fff3", marginTop: 30 },
   tableName: { flexBasis: 0.4, flexGrow: 1 },
-  sorting: {
-    display: "flex",
-    flexDirection: "row",
-    flexBasis: 0.5,
-    marginLeft: 20,
-  },
   search: {
     flexBasis: 0.5,
     position: "relative",

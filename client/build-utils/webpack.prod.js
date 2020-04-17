@@ -6,7 +6,7 @@ module.exports = {
   devtool: "source-map",
   plugins: [
     new Dotenv({
-      path: path.resolve(__dirname, ".env.production")
-    })
-  ]
+      path: path.resolve(__dirname, ".env.production"),
+    }),
+  ],
 };

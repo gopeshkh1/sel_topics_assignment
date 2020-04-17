@@ -10,10 +10,10 @@ app.use(bodyParser.json());
 
 const api = require("./routes/api");
 
+// app.use(express.static("client/dist"));
+
 // app.get("*", (req, res) => {
-//   res.sendFile(
-//     path.resolve(path.join(__dirname, "../"), "client", "dist", "index.html")
-//   );
+//   res.sendFile(path.join(__dirname, "../"), "client", "dist", "index.html");
 // });
 
 app.use("/api", api);
