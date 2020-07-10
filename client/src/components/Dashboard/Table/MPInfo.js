@@ -14,28 +14,28 @@ const displayParams = [
   { id: "Constituency", label: "Constituency" },
   {
     id: "Educational qualifications",
-    label: "Educational qualifications",
+    label: "Educational qualifications"
   },
   { id: "Educational qualifications - details", label: "Educational details" },
   { id: "Age", label: "Age" },
   { id: "Gender", label: "Gender" },
-  { id: "House", label: "House" },
+  { id: "House", label: "House" }
 ];
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
     margin: 0,
-    padding: theme.spacing(2),
+    padding: theme.spacing(2)
   },
   closeButton: {
     position: "absolute",
     right: theme.spacing(1),
     top: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
+    color: theme.palette.grey[500]
+  }
 });
 
-const DialogTitle = withStyles(styles)((props) => {
+const DialogTitle = withStyles(styles)(props => {
   const { children, classes, onClose, ...other } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
@@ -53,19 +53,18 @@ const DialogTitle = withStyles(styles)((props) => {
   );
 });
 
-const DialogContent = withStyles((theme) => ({
+const DialogContent = withStyles(theme => ({
   root: {
     padding: theme.spacing(2),
     "& span": {
       color: "brown",
-      margin: 7,
-    },
-  },
+      margin: 7
+    }
+  }
 }))(MuiDialogContent);
 
 export default function MPInfo(props) {
   const { selectedRow, handleClose, open } = props;
-
   return (
     <div>
       {selectedRow && (
@@ -75,13 +74,14 @@ export default function MPInfo(props) {
           open={open}
         >
           <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-            <Avatar style={{ backgroundColor: "orange" }}>
-              {selectedRow["MP name"].charAt(0)}
-            </Avatar>
+            <Avatar
+              alt={selectedRow["MP name"].charAt(0)}
+              src={`./images/${selectedRow["MP name"]}.jpg`}
+            ></Avatar>
             {selectedRow["MP name"]}
           </DialogTitle>
           <DialogContent dividers>
-            {displayParams.map((param) => (
+            {displayParams.map(param => (
               <Typography key={param.id}>
                 <span>
                   <b>{param.label}</b>

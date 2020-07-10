@@ -16,17 +16,17 @@ import { TableHeadMenu } from "./CustomizedComp";
 const columns = [
   { id: "MP name", label: "Name", minWidth: 170 },
   { id: "Political party", label: "Party", minWidth: 100 },
-  { id: "State", label: "State", minWidth: 170 },
+  { id: "State", label: "State", minWidth: 170 }
 ];
 
 const discreteValues = {
   "Political party": new Set(["All"]),
-  State: new Set(["All"]),
+  State: new Set(["All"])
 };
 
-const columnFilterValue = {
+const defaultColFilterVal = {
   "Political party": "All",
-  State: "All",
+  State: "All"
 };
 
 const sortByParams = [
@@ -34,9 +34,9 @@ const sortByParams = [
   { id: "Questions", label: "No. of Ques. asked" },
   {
     id: "Attendance",
-    label: "Attendance %",
+    label: "Attendance %"
   },
-  { id: "Private Member Bills", label: "Private Member Bills" },
+  { id: "Private Member Bills", label: "Private Member Bills" }
 ];
 
 var __init = true;
@@ -50,12 +50,14 @@ export default function CustomizedTable() {
   const [rows_copy, setRowCopy] = useState(defaultrows);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
-
+  const [columnFilterValue, setColumnFilter] = useState({
+    ...defaultColFilterVal
+  });
   const toggleModalState = () => {
     setModalOpen(!modalOpen);
   };
 
-  const displayUserInfo = (name) => {
+  const displayUserInfo = name => {
     toggleModalState();
     setSelectedRow(name);
   };
@@ -64,9 +66,9 @@ export default function CustomizedTable() {
     setPage(newPage);
   };
 
-  const onMpSearchValueChange = (e) => {
+  const onMpSearchValueChange = e => {
     var value = e.target.value.toLowerCase();
-    var newrows = defaultrows.filter((row) =>
+    var newrows = defaultrows.filter(row =>
       row["MP name"].toLowerCase().startsWith(value)
     );
 
@@ -74,23 +76,23 @@ export default function CustomizedTable() {
     setRowCopy(newrows);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = event => {
     setRowsPerPage(event.target.value);
     setPage(0);
   };
 
-  const sortingComparator = (param) => (a, b) => {
+  const sortingComparator = param => (a, b) => {
     if (a[param] > b[param]) return -1;
     if (a[param] < b[param]) return 1;
   };
 
-  const sortTheTable = (param) => {
+  const sortTheTable = param => {
     setSortBy(param);
     setRowCopy(defaultrows.sort(sortingComparator(param.id)));
   };
 
-  const makeDiscreteValuesSet = (rows) => {
-    rows.forEach((row) => {
+  const makeDiscreteValuesSet = rows => {
+    rows.forEach(row => {
       for (var val in discreteValues) {
         discreteValues[val].add(row[val]);
       }
@@ -99,7 +101,7 @@ export default function CustomizedTable() {
 
   useEffect(() => {
     if (__init) {
-      axios.get("/api/mpdata").then((res) => {
+      axios.get("/api/mpdata").then(res => {
         var rows = res.data;
         rows.sort(sortingComparator(sortByParams[0]["id"]));
         setDefaultRows(rows);
@@ -110,14 +112,18 @@ export default function CustomizedTable() {
     }
   });
 
+  const resetDefaults = () => {
+    setColumnFilter({ ...defaultColFilterVal });
+  };
+
   const columnFilterAction = (param, selectedColumn) => {
     columnFilterValue[selectedColumn] = param;
     const newrows = columnFilter(defaultrows);
     setRowCopy(newrows);
   };
 
-  const columnFilter = (rows) => {
-    return rows.filter((row) => {
+  const columnFilter = rows => {
+    return rows.filter(row => {
       var returnValue = true;
 
       for (var value in columnFilterValue) {
@@ -139,6 +145,7 @@ export default function CustomizedTable() {
         sortBy={sortBy}
         sortTheTable={sortTheTable}
         sortByParams={sortByParams}
+        resetDefaults={resetDefaults}
         onMpSearchValueChange={onMpSearchValueChange}
       />
       <Paper className={classes.root}>
@@ -152,7 +159,7 @@ export default function CustomizedTable() {
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                {columns.map((column) => {
+                {columns.map(column => {
                   const tableHeadOpen =
                     column.label === "State" || column.label === "Party";
 
@@ -182,7 +189,7 @@ export default function CustomizedTable() {
               {!__init &&
                 rows_copy
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
+                  .map(row => {
                     return (
                       <TableRow
                         hover
@@ -191,7 +198,7 @@ export default function CustomizedTable() {
                         role="checkbox"
                         tabIndex={-1}
                       >
-                        {columns.map((column) => {
+                        {columns.map(column => {
                           const value = row[column.id];
                           return (
                             <TableCell key={column.id} align={column.align}>

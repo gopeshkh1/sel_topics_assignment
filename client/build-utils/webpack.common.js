@@ -2,6 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: "./client/src/index.js",
@@ -10,25 +11,28 @@ module.exports = {
       {
         test: /\.(js)$/,
         exclude: /node_modules/,
-        use: ["babel-loader"],
-      },
-    ],
+        use: ["babel-loader"]
+      }
+    ]
   },
   resolve: {
-    extensions: ["*", ".js", ".jsx"],
+    extensions: ["*", ".js", ".jsx"]
   },
   output: {
     path: path.resolve(__dirname, "../", "dist"),
     publicPath: "/",
-    filename: "bundle.js",
+    filename: "bundle.js"
   },
   plugins: [
     new CleanWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       title: "Data for Democracy",
-      template: "./client/src/index.html",
+      template: "./client/src/index.html"
     }),
+    new CopyPlugin({
+      patterns: [{ from: "./client/public" }]
+    })
   ],
   devServer: {
     contentBase: "./dist",
@@ -38,9 +42,9 @@ module.exports = {
     proxy: {
       "/api": {
         target: "http://localhost:8000",
-        secure: false,
+        secure: false
         // changeOrigin: true
-      },
-    },
-  },
+      }
+    }
+  }
 };
