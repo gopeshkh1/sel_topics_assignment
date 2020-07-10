@@ -3,7 +3,7 @@ const path = require("path");
 
 module.exports = {
   mode: "production",
-  devtool: "source-map",
+  // devtool: "source-map",
   plugins: [
     new Dotenv({
       path: path.resolve(__dirname, ".env.production"),
