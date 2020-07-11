@@ -4,6 +4,34 @@ const csv = require("csv-parser");
 const fs = require("fs");
 const path = require("path");
 
+const scale = {
+  Debates: {
+    0: 0,
+    2: 2.5,
+    5: 5,
+    8: 7.5,
+    12: 10,
+    20: 12.5,
+    30: 15,
+    50: 17.5,
+    75: 20,
+    100: 22.5,
+    10000000: 25
+  },
+  Questions: {
+    0: 0,
+    4: 3,
+    10: 6,
+    15: 9,
+    30: 12,
+    45: 15,
+    60: 18,
+    75: 21,
+    100: 24,
+    150: 27,
+    10000000: 30
+  }
+};
 const datatype = {
   Attendance: "float",
   Debates: "int",
@@ -29,6 +57,14 @@ function valueFormatter(rows) {
   return rows;
 }
 
+function calculateScale(type, value) {
+  for (key in scale[type]) {
+    if (parseInt(key) >= value) {
+      return scale[type][key];
+    }
+  }
+}
+
 router.get("/mpdata", (req, res) => {
   let results = [];
   const pathname = path.join(__dirname, "../../");
@@ -47,9 +83,9 @@ router.get("/mpdata", (req, res) => {
       results = results.map(result => {
         result["Performance_Rating"] =
           result["Attendance"] * 0.3 +
-          result["Debates"] * 0.25 +
-          result["Questions"] * 0.3 +
-          result["Private Member Bills"] * 0.15;
+          calculateScale("Debates", result["Debates"]) +
+          calculateScale("Questions", result["Questions"]) +
+          Math.min(result["Private Member Bills"] * 1.5, 15);
 
         result["Performance_Rating"] = Number(
           result["Performance_Rating"].toFixed(5)
