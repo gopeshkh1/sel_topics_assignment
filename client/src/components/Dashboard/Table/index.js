@@ -37,7 +37,9 @@ const sortByParams = [
     id: "Attendance",
     label: "Attendance %"
   },
-  { id: "Private Member Bills", label: "Private Member Bills" }
+  { id: "Private Member Bills", label: "Private Member Bills" },
+  { id: "Criminal Case", label: "Criminal Cases" },
+  { id: "Total Assets", label: "Total Assets" }
 ];
 
 var __init = true;

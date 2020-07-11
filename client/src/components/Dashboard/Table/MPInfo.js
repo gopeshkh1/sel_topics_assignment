@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -6,7 +6,7 @@ import MuiDialogContent from "@material-ui/core/DialogContent";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
-import { Avatar, Grid } from "@material-ui/core";
+import { Avatar, Grid, Button } from "@material-ui/core";
 
 const displayParams = [
   { id: "Number of terms", label: "Term" },
@@ -19,7 +19,21 @@ const displayParams = [
   { id: "Educational qualifications - details", label: "Educational details" },
   { id: "Age", label: "Age" },
   { id: "Gender", label: "Gender" },
-  { id: "House", label: "House" }
+  { id: "House", label: "House" },
+  { id: "Political party", label: "Party" }
+];
+
+const displayMoreParams = [
+  { id: "Performance_Rating", label: "Performance Rating" },
+  { id: "Debates", label: "No. of debates" },
+  { id: "Questions", label: "No. of Ques. asked" },
+  {
+    id: "Attendance",
+    label: "Attendance %"
+  },
+  { id: "Private Member Bills", label: "Private Member Bills" },
+  { id: "Criminal Case", label: "Criminal Cases" },
+  { id: "Total Assets", label: "Total Assets" }
 ];
 
 const styles = theme => ({
@@ -65,6 +79,12 @@ const DialogContent = withStyles(theme => ({
 
 export default function MPInfo(props) {
   const { selectedRow, handleClose, open } = props;
+  const [displayMore, setDisplayMore] = useState("more...");
+
+  function toggleMore() {
+    const value = displayMore === "more..." ? "less..." : "more...";
+    setDisplayMore(value);
+  }
   return (
     <div>
       {selectedRow && (
@@ -95,6 +115,18 @@ export default function MPInfo(props) {
                 {selectedRow[param.id]}
               </Typography>
             ))}
+            <Button onClick={toggleMore} color="primary">
+              {displayMore}
+            </Button>
+            {displayMore === "less..." &&
+              displayMoreParams.map(param => (
+                <Typography key={param.id}>
+                  <span>
+                    <b>{param.label}</b>
+                  </span>
+                  {selectedRow[param.id]}
+                </Typography>
+              ))}
           </DialogContent>
         </Dialog>
       )}
