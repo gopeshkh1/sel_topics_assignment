@@ -37,17 +37,17 @@ const displayMoreParams = [
   { id: "Liabilities", label: "Liabilities" }
 ];
 const edu = {
-  "Illiterate":"NO EDU",
-  "Literate":"Low",
-  "5th Pass":"Low",
-  "8th Pass":"Low",
-  "10th Pass":"Medium",
-  "12th Pass":"Medium",
-  "Graduate":"High",
-  "Graduate Professional":"High",
-  "Post Graduate":"High",
-  "Doctorate":"High",
-  "Others":"-"
+  Illiterate: "NO EDU",
+  Literate: "Low",
+  "5th Pass": "Low",
+  "8th Pass": "Low",
+  "10th Pass": "Medium",
+  "12th Pass": "Medium",
+  Graduate: "High",
+  "Graduate Professional": "High",
+  "Post Graduate": "High",
+  Doctorate: "High",
+  Others: "-"
 };
 
 const styles = theme => ({
@@ -94,72 +94,102 @@ const DialogContent = withStyles(theme => ({
 export default function MPInfo(props) {
   const { selectedRow, handleClose, open } = props;
   const [displayMore, setDisplayMore] = useState("See Performance Parameters");
+  const [zoomImage, setZoomImage] = useState(false);
 
   function toggleMore() {
-    const value = displayMore === "See Performance Parameters" ? "less..." : "See Performance Parameters";
+    const value =
+      displayMore === "See Performance Parameters"
+        ? "less..."
+        : "See Performance Parameters";
     setDisplayMore(value);
+  }
+
+  function toggleZoom() {
+    setZoomImage(state => !state);
   }
   return (
     <div>
       {selectedRow && (
-        <Dialog
-          onClose={handleClose}
-          aria-labelledby="customized-dialog-title"
-          open={open}
-        >
-          <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-            <Grid container>
-              <Grid item xs={2}>
-                <Avatar
-                  alt={selectedRow["MP name"].charAt(0)}
-                  src={`./images/${selectedRow["MP name"]}.jpg`}
-                ></Avatar>
+        <>
+          <Dialog
+            onClose={handleClose}
+            aria-labelledby="customized-dialog-title"
+            open={open}
+          >
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+              <Grid container>
+                <Grid item xs={2}>
+                  <Avatar
+                    alt={selectedRow["MP name"].charAt(0)}
+                    src={`./images/${selectedRow["MP name"]}.jpg`}
+                    onClick={toggleZoom}
+                  ></Avatar>
+                </Grid>
+                <Grid item xs={9}>
+                  {selectedRow["MP name"]}
+                </Grid>
               </Grid>
-              <Grid item xs={9}>
-                {selectedRow["MP name"]}
-              </Grid>
-            </Grid>
-          </DialogTitle>
-          <DialogContent dividers>
-            {displayParams.map(param => (
-              <Typography key={param.id}>
-                <span>
-                  <b>{param.label}</b>
-                </span>
-                {selectedRow[param.id]}
-              </Typography>
-            ))}
-            <Button onClick={toggleMore} color="primary">
-              {displayMore}
-            </Button>
-            {displayMore === "less..." &&
-              displayMoreParams.map(param => (
+            </DialogTitle>
+            <DialogContent dividers>
+              {displayParams.map(param => (
                 <Typography key={param.id}>
                   <span>
                     <b>{param.label}</b>
                   </span>
-                  {param.label==="Performance Rating" ? <b>{selectedRow[param.id]}</b> : selectedRow[param.id]}
-                  {(() => {
-                      if (param.label==="Criminal Cases") {
-                        return (
-                          selectedRow[param.id]>4 ? <b> (High)</b> : selectedRow[param.id]>0 ? <b> (Medium)</b> : <b> (Low)</b>
-                        )
-                      }
-                      if (param.label==="Total Assets") {
-                          return (
-                            selectedRow[param.id]>10000000 ? <b> (High)</b> : selectedRow[param.id]>3000000 ? <b> (Medium)</b> : <b> (Low)</b>
-                          )
-                      }  
-                      if (param.label==="Educational qualifications") {
-                        return (
-                        <b> ({edu[selectedRow[param.id]]})</b>
-                        )
-                    } 
-                    })()}
+                  {selectedRow[param.id]}
                 </Typography>
               ))}
-          </DialogContent>
-        </Dialog>
+              <Button onClick={toggleMore} color="primary">
+                {displayMore}
+              </Button>
+              {displayMore === "less..." &&
+                displayMoreParams.map(param => (
+                  <Typography key={param.id}>
+                    <span>
+                      <b>{param.label}</b>
+                    </span>
+                    {param.label === "Performance Rating" ? (
+                      <b>{selectedRow[param.id]}</b>
+                    ) : (
+                      selectedRow[param.id]
+                    )}
+                    {(() => {
+                      if (param.label === "Criminal Cases") {
+                        return selectedRow[param.id] > 4 ? (
+                          <b> (High)</b>
+                        ) : selectedRow[param.id] > 0 ? (
+                          <b> (Medium)</b>
+                        ) : (
+                          <b> (Low)</b>
+                        );
+                      }
+                      if (param.label === "Total Assets") {
+                        return selectedRow[param.id] > 10000000 ? (
+                          <b> (High)</b>
+                        ) : selectedRow[param.id] > 3000000 ? (
+                          <b> (Medium)</b>
+                        ) : (
+                          <b> (Low)</b>
+                        );
+                      }
+                      if (param.label === "Educational qualifications") {
+                        return <b> ({edu[selectedRow[param.id]]})</b>;
+                      }
+                    })()}
+                  </Typography>
+                ))}
+            </DialogContent>
+          </Dialog>
+          <Dialog onClose={toggleZoom} open={zoomImage}>
+            <MuiDialogContent>
+              <img
+                src={`./images/${selectedRow["MP name"]}.jpg`}
+                width="200"
+                height="150"
+              />
+            </MuiDialogContent>
+          </Dialog>
+        </>
       )}
     </div>
   );
