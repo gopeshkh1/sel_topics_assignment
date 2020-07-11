@@ -12,10 +12,6 @@ const displayParams = [
   { id: "Number of terms", label: "Term" },
   { id: "State", label: "State" },
   { id: "Constituency", label: "Constituency" },
-  {
-    id: "Educational qualifications",
-    label: "Educational qualifications"
-  },
   { id: "Educational qualifications - details", label: "Educational details" },
   { id: "Age", label: "Age" },
   { id: "Gender", label: "Gender" },
@@ -34,8 +30,25 @@ const displayMoreParams = [
   { id: "Private Member Bills", label: "Private Member Bills" },
   { id: "Criminal Case", label: "Criminal Cases" },
   { id: "Total Assets", label: "Total Assets" },
+  {
+    id: "Educational qualifications",
+    label: "Educational qualifications"
+  },
   { id: "Liabilities", label: "Liabilities" }
 ];
+const edu = {
+  "Illiterate":"NO EDU",
+  "Literate":"Low",
+  "5th Pass":"Low",
+  "8th Pass":"Low",
+  "10th Pass":"Medium",
+  "12th Pass":"Medium",
+  "Graduate":"High",
+  "Graduate Professional":"High",
+  "Post Graduate":"High",
+  "Doctorate":"High",
+  "Others":"-"
+};
 
 const styles = theme => ({
   root: {
@@ -125,7 +138,24 @@ export default function MPInfo(props) {
                   <span>
                     <b>{param.label}</b>
                   </span>
-                  {selectedRow[param.id]}
+                  {param.label==="Performance Rating" ? <b>{selectedRow[param.id]}</b> : selectedRow[param.id]}
+                  {(() => {
+                      if (param.label==="Criminal Cases") {
+                        return (
+                          selectedRow[param.id]>4 ? <b> (High)</b> : selectedRow[param.id]>0 ? <b> (Medium)</b> : <b> (Low)</b>
+                        )
+                      }
+                      if (param.label==="Total Assets") {
+                          return (
+                            selectedRow[param.id]>10000000 ? <b> (High)</b> : selectedRow[param.id]>3000000 ? <b> (Medium)</b> : <b> (Low)</b>
+                          )
+                      }  
+                      if (param.label==="Educational qualifications") {
+                        return (
+                        <b> ({edu[selectedRow[param.id]]})</b>
+                        )
+                    } 
+                    })()}
                 </Typography>
               ))}
           </DialogContent>
