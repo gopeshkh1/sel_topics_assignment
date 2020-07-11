@@ -47,7 +47,8 @@ const edu = {
   "Graduate Professional": "High",
   "Post Graduate": "High",
   Doctorate: "High",
-  Others: "-"
+  Others: "-",
+  "Information Not Available": "-",
 };
 
 const styles = theme => ({
@@ -159,16 +160,20 @@ export default function MPInfo(props) {
                           <b> (High)</b>
                         ) : selectedRow[param.id] > 0 ? (
                           <b> (Medium)</b>
-                        ) : (
+                        ) : selectedRow[param.id] === 0 ? (
                           <b> (Low)</b>
+                        ) :(
+                          <b>-</b>
                         );
                       }
                       if (param.label === "Total Assets") {
-                        return selectedRow[param.id] > 10000000 ? (
+                        return selectedRow[param.id] == null ? (
+                          <b> -</b>
+                        ) :selectedRow[param.id] > 10000000 ? (
                           <b> (High)</b>
                         ) : selectedRow[param.id] > 3000000 ? (
                           <b> (Medium)</b>
-                        ) : (
+                        ) :(
                           <b> (Low)</b>
                         );
                       }
