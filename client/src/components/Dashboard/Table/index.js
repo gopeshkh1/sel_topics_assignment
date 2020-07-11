@@ -131,6 +131,7 @@ export default function CustomizedTable() {
     columnFilterValue[selectedColumn] = param;
     const newrows = columnFilter(defaultrows);
     setRowCopy(newrows);
+    setPage(0);
   };
 
   const columnFilter = rows => {
