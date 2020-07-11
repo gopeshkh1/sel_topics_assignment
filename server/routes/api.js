@@ -37,7 +37,7 @@ const datatype = {
   Debates: "int",
   "Private Member Bills": "int",
   Questions: "int",
-  "Criminal Cases": "int",
+  "Criminal Case": "int",
   "Total Assets": "int",
   "National Debates average": "float",
   "National Private Member Bills average": "float",

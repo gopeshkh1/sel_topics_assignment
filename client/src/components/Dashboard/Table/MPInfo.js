@@ -33,7 +33,8 @@ const displayMoreParams = [
   },
   { id: "Private Member Bills", label: "Private Member Bills" },
   { id: "Criminal Case", label: "Criminal Cases" },
-  { id: "Total Assets", label: "Total Assets" }
+  { id: "Total Assets", label: "Total Assets" },
+  { id: "Liabilities", label: "Liabilities" }
 ];
 
 const styles = theme => ({

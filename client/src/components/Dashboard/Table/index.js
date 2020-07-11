@@ -77,6 +77,7 @@ export default function CustomizedTable() {
 
     newrows = columnFilter(newrows);
     setRowCopy(newrows);
+    setPage(0);
   };
 
   const handleChangeRowsPerPage = event => {
@@ -91,7 +92,12 @@ export default function CustomizedTable() {
 
   const sortTheTable = param => {
     setSortBy(param);
-    setRowCopy(defaultrows.sort(sortingComparator(param.id)));
+
+    const newRows = defaultrows
+      .sort(sortingComparator(param.id))
+      .map((row, index) => ({ ...row, ["rank"]: index + 1 }));
+    setDefaultRows(newRows);
+    setRowCopy(newRows);
   };
 
   const makeDiscreteValuesSet = rows => {
@@ -106,7 +112,9 @@ export default function CustomizedTable() {
     if (__init) {
       axios.get("/api/mpdata").then(res => {
         var rows = res.data;
-        rows.sort(sortingComparator(sortByParams[0]["id"]));
+        rows = rows
+          .sort(sortingComparator(sortByParams[0]["id"]))
+          .map((row, index) => ({ ...row, ["rank"]: index + 1 }));
         setDefaultRows(rows);
         setRowCopy(rows);
         makeDiscreteValuesSet(rows);
@@ -197,12 +205,12 @@ export default function CustomizedTable() {
                     return (
                       <TableRow
                         hover
-                        key={row["ID"]}
+                        key={row["rank"]}
                         onClick={displayUserInfo.bind(this, row)}
                         role="checkbox"
                         tabIndex={-1}
                       >
-                        <TableCell>{page * rowsPerPage + index + 1}</TableCell>
+                        <TableCell>{row.rank}</TableCell>
                         {columns.map(column => {
                           const value = row[column.id];
                           return (
