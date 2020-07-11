@@ -13,11 +13,11 @@ const datatype = {
   "National Debates average": "float",
   "National Private Member Bills average": "float",
   "National Questions average": "float",
-  "National Attendance average": "float",
+  "National Attendance average": "float"
 };
 
 function valueFormatter(rows) {
-  rows.map((row) => {
+  rows.map(row => {
     for (var i in row) {
       if (datatype[i] === "int") {
         row[i] = parseInt(row[i]);
@@ -36,14 +36,26 @@ router.get("/mpdata", (req, res) => {
 
   fs.createReadStream(filename)
     .pipe(csv())
-    .on("data", (data) => results.push(data))
+    .on("data", data => results.push(data))
     .on("end", () => {
       results = valueFormatter(results);
-      results = results.map((result) => {
+      results = results.map(result => {
         result["Attendance"] = result["Attendance"] * 100;
         return result;
       });
 
+      results = results.map(result => {
+        result["Performance_Rating"] =
+          result["Attendance"] * 0.3 +
+          result["Debates"] * 0.25 +
+          result["Questions"] * 0.3 +
+          result["Private Member Bills"] * 0.15;
+
+        result["Performance_Rating"] = Number(
+          result["Performance_Rating"].toFixed(5)
+        );
+        return result;
+      });
       // console.log(results);
       res.send(results);
     });

@@ -30,6 +30,7 @@ const defaultColFilterVal = {
 };
 
 const sortByParams = [
+  { id: "Performance_Rating", label: "Performance Rating" },
   { id: "Debates", label: "No. of debates" },
   { id: "Questions", label: "No. of Ques. asked" },
   {
@@ -159,6 +160,7 @@ export default function CustomizedTable() {
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
+                <TableCell>Rank</TableCell>
                 {columns.map(column => {
                   const tableHeadOpen =
                     column.label === "State" || column.label === "Party";
@@ -189,7 +191,7 @@ export default function CustomizedTable() {
               {!__init &&
                 rows_copy
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map(row => {
+                  .map((row, index) => {
                     return (
                       <TableRow
                         hover
@@ -198,6 +200,7 @@ export default function CustomizedTable() {
                         role="checkbox"
                         tabIndex={-1}
                       >
+                        <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                         {columns.map(column => {
                           const value = row[column.id];
                           return (

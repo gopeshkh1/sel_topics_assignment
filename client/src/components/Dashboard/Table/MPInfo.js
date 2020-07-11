@@ -6,7 +6,7 @@ import MuiDialogContent from "@material-ui/core/DialogContent";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
-import { Avatar } from "@material-ui/core";
+import { Avatar, Grid } from "@material-ui/core";
 
 const displayParams = [
   { id: "Number of terms", label: "Term" },
@@ -55,7 +55,7 @@ const DialogTitle = withStyles(styles)(props => {
 
 const DialogContent = withStyles(theme => ({
   root: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(4),
     "& span": {
       color: "brown",
       margin: 7
@@ -74,11 +74,17 @@ export default function MPInfo(props) {
           open={open}
         >
           <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-            <Avatar
-              alt={selectedRow["MP name"].charAt(0)}
-              src={`./images/${selectedRow["MP name"]}.jpg`}
-            ></Avatar>
-            {selectedRow["MP name"]}
+            <Grid container>
+              <Grid item xs={2}>
+                <Avatar
+                  alt={selectedRow["MP name"].charAt(0)}
+                  src={`./images/${selectedRow["MP name"]}.jpg`}
+                ></Avatar>
+              </Grid>
+              <Grid item xs={9}>
+                {selectedRow["MP name"]}
+              </Grid>
+            </Grid>
           </DialogTitle>
           <DialogContent dividers>
             {displayParams.map(param => (
