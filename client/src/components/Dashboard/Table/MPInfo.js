@@ -80,10 +80,10 @@ const DialogContent = withStyles(theme => ({
 
 export default function MPInfo(props) {
   const { selectedRow, handleClose, open } = props;
-  const [displayMore, setDisplayMore] = useState("more...");
+  const [displayMore, setDisplayMore] = useState("See Performance Parameters");
 
   function toggleMore() {
-    const value = displayMore === "more..." ? "less..." : "more...";
+    const value = displayMore === "See Performance Parameters" ? "less..." : "See Performance Parameters";
     setDisplayMore(value);
   }
   return (
